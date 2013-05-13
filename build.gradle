@@ -40,31 +40,18 @@ dependencies {
 	compile fileTree(dir: 'lib', includes: ['*.jar'])
 	compile "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1"
 	runtime "org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1"
-	runtime "org.datanucleus:datanucleus-core:3.2.2"
+	
 	runtime "org.datanucleus:datanucleus-api-jpa:3.2.1"
 	runtime "org.datanucleus:datanucleus-api-jdo:3.2.1"
 	runtime "javax.jdo:jdo2-api:2.3-eb"
 	runtime "javax.transaction:jta:1.1"
+	runtime 'com.google.inject.extensions:guice-servlet:3.0'
+	runtime files("D:/Java/appengine-java-sdk-1.7.7.1/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.1.2.jar")
 	
 	compile "javax.validation:validation-api:1.0.0.GA"
 	runtime "org.hibernate:hibernate-validator:4.3.1.Final"
-	runtime files("D:/Java/appengine-java-sdk-1.7.7.1/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.1.2.jar")
 }
 
-gaeEnhance.doFirst {
-    copy {
-        into('src/main/webapp/WEB-INF/lib/')
-        from configurations.runtime
-    }
-}
-
-gaeEnhance.doLast {
-    delete {
-        delete('src/main/webapp/WEB-INF/lib/')
-    }
-}
-
-war.dependsOn 'gaeEnhance'
 
 task wrapper(type: Wrapper) {
 	description = 'Generates gradlew[.bat] scripts'
