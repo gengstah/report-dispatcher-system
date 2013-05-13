@@ -36,11 +36,11 @@ dependencies {
 	compile "org.springframework:spring-orm:$springVersion"
 	
 	compile "jstl:jstl:1.2"
-		
+	
 	compile fileTree(dir: 'lib', includes: ['*.jar'])
 	compile "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1"
 	runtime "org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1"
-	
+	runtime "org.datanucleus:datanucleus-core:3.2.2"
 	runtime "org.datanucleus:datanucleus-api-jpa:3.2.1"
 	runtime "org.datanucleus:datanucleus-api-jdo:3.2.1"
 	runtime "javax.jdo:jdo2-api:2.3-eb"
