@@ -1,0 +1,99 @@
+apply plugin: 'gae'
+apply plugin: 'eclipse'
+apply plugin: 'jetty'
+
+def springVersion = "3.2.2.RELEASE"
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath 'org.gradle.api.plugins:gradle-gae-plugin:0.8'
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	providedCompile "javax.servlet:servlet-api:2.5"
+	
+	testCompile "junit:junit:4.+"
+	testCompile "org.mockito:mockito-all:1.9.5"
+	
+	compile "log4j:log4j:1.2.16"
+	compile "org.slf4j:slf4j-api:1.7.2"
+	compile "org.slf4j:slf4j-log4j12:1.7.2"
+	
+	compile "org.springframework:spring-core:$springVersion"
+	compile "org.springframework:spring-context:$springVersion"
+	compile "org.springframework:spring-jdbc:$springVersion"
+	compile "org.springframework:spring-web:$springVersion"
+	compile "org.springframework:spring-webmvc:$springVersion"
+	compile "org.springframework:spring-orm:$springVersion"
+	
+	compile "jstl:jstl:1.2"
+		
+	compile fileTree(dir: 'lib', includes: ['*.jar'])
+	compile "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1"
+	runtime "org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1"
+	runtime "org.datanucleus:datanucleus-core:3.2.2"
+	runtime "org.datanucleus:datanucleus-api-jpa:3.2.1"
+	runtime "org.datanucleus:datanucleus-api-jdo:3.2.1"
+	runtime "javax.jdo:jdo2-api:2.3-eb"
+	runtime "javax.transaction:jta:1.1"
+	
+	compile "javax.validation:validation-api:1.0.0.GA"
+	runtime "org.hibernate:hibernate-validator:4.3.1.Final"
+	runtime files("D:/Java/appengine-java-sdk-1.7.7.1/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.1.2.jar")
+}
+
+gaeEnhance.doFirst {
+    copy {
+        into('src/main/webapp/WEB-INF/lib/')
+        from configurations.runtime
+    }
+}
+
+gaeEnhance.doLast {
+    delete {
+        delete('src/main/webapp/WEB-INF/lib/')
+    }
+}
+
+war.dependsOn 'gaeEnhance'
+
+task wrapper(type: Wrapper) {
+	description = 'Generates gradlew[.bat] scripts'
+    gradleVersion = '1.4'
+}
+
+task initProject () << {
+	project.apply { plugin('war') }
+
+	project.sourceSets*.allSource.srcDirTrees.flatten().dir.each { dir ->
+		dir.mkdirs()
+	}
+}
+
+gae {
+    httpPort = 8080
+    optimizeWar = false
+
+    appcfg {
+        email = '...'
+        password = '...'
+
+        logs {
+            severity = 1
+            outputFile = file('logs.txt')
+        }
+
+        app {
+            id = 'report-dispatcher-system'
+        }
+    }
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://java.sun.com/xml/ns/javaee" 
+		xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+							http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+		id="WebApp_ID"
+		version="3.0" 
+		metadata-complete="false">
+  <display-name>Report Dispatcher System</display-name>
+    
+  <!-- ========================================================== -->
+  <!-- Servlet Configuration - START -->
+  <!-- ========================================================== -->
+  <servlet>
+    <servlet-name>dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/rds/*</url-pattern>
+  </servlet-mapping>
+  <!-- ========================================================== -->
+  <!-- Servlet Configuration - END -->
+  <!-- ========================================================== -->
+  
+  <!-- ========================================================== -->
+  <!-- Context Parameters - START -->
+  <!-- ========================================================== -->
+  <context-param>
+      <param-name>defaultTheme</param-name>
+      <param-value>smoothness</param-value>      
+  </context-param>
+  <context-param>
+	  <param-name>contextConfigLocation</param-name>
+      <param-value>
+          classpath:applicationContext-orm.xml
+      </param-value>
+    </context-param>
+  <!-- ========================================================== -->
+  <!-- Context Parameters - END -->
+  <!-- ========================================================== -->
+  
+  <!-- ========================================================== -->
+  <!-- Listeners - START -->
+  <!-- ========================================================== -->
+  <listener>
+      <listener-class>org.cognoscenti.listener.ThemeContextListener</listener-class>      
+  </listener>
+  <listener>
+      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <!-- ========================================================== -->
+  <!-- Listeners - START -->
+  <!-- ========================================================== -->
+  
+  <!-- ========================================================== -->
+  <!-- Session Configuration - START -->
+  <!-- ========================================================== -->
+  <session-config>
+  	<session-timeout>60</session-timeout>
+  </session-config>
+  <!-- ========================================================== -->
+  <!-- Session Configuration - END -->
+  <!-- ========================================================== -->
+  
+  <!-- ========================================================== -->
+  <!-- JSP Configuration - START -->
+  <!-- ========================================================== -->
+  <jsp-config>
+  	<jsp-property-group>
+  		<url-pattern>*.jsp</url-pattern>
+  		<scripting-invalid>true</scripting-invalid>
+  	</jsp-property-group>
+  </jsp-config>
+  <!-- ========================================================== -->
+  <!-- JSP Configuration - END -->
+  <!-- ========================================================== -->
+    
+  <!-- ========================================================== -->
+  <!-- Welcome File Lists - START -->
+  <!-- ========================================================== -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <!-- ========================================================== -->
+  <!-- Welcome File Lists - END -->
+  <!-- ========================================================== -->
+</web-app>
