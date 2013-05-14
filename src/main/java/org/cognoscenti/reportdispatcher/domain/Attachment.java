@@ -37,7 +37,7 @@ public class Attachment implements Serializable {
 	/**
 	 * Default constructor
 	 */
-	public Attachment() { }
+	public Attachment(String attachmentLocation) { setAttachmentLocation(attachmentLocation); }
 
 	/**
 	 * @return the attachmentId

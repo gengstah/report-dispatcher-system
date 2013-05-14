@@ -11,8 +11,4 @@ $(function() {
 			delay: 250
 		}
 	});
-	
-	$("#addAttachmentButton").click(function () {
-		
-	}
 });

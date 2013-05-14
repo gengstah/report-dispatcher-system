@@ -30,6 +30,12 @@ public class ReportDispatchRecord {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int reportDispatchRecordId;
 	
+	@Column(name="NAME")
+	private String name;
+	
+	@Column(name="DESCRIPTION")
+	private String description;
+	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="reportDispatchRecord")
 	private List<Attachment> attachments;
 	
@@ -57,6 +63,34 @@ public class ReportDispatchRecord {
 	 */
 	public void setReportDispatchRecordId(int reportDispatchRecordId) {
 		this.reportDispatchRecordId = reportDispatchRecordId;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**

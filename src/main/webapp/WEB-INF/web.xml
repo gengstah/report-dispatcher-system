@@ -36,7 +36,8 @@
   <context-param>
 	  <param-name>contextConfigLocation</param-name>
       <param-value>
-          classpath:applicationContext-orm.xml
+          <!-- classpath:applicationContext-orm.xml
+          classpath:applicationContext-service.xml -->
       </param-value>
     </context-param>
   <!-- ========================================================== -->

@@ -46,10 +46,12 @@ dependencies {
 	runtime "javax.jdo:jdo2-api:2.3-eb"
 	runtime "javax.transaction:jta:1.1"
 	runtime 'com.google.inject.extensions:guice-servlet:3.0'
-	runtime files("D:/Java/appengine-java-sdk-1.7.7.1/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.1.2.jar")
+	runtime files("C:/Documents and Settings/Administrator/My Documents/Java/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.7.1/appengine-java-sdk-1.7.7.1/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.1.2.jar")
 	
 	compile "javax.validation:validation-api:1.0.0.GA"
 	runtime "org.hibernate:hibernate-validator:4.3.1.Final"
+	
+	compile "javax.mail:mail:1.4.7"
 }
 
 
@@ -83,4 +85,8 @@ gae {
             id = 'report-dispatcher-system'
         }
     }
+}
+
+jettyRun {
+    contextPath = "/"
 }

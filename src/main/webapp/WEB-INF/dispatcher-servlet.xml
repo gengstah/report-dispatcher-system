@@ -12,6 +12,10 @@
 	
     <mvc:annotation-driven />
     
+    <bean id="reportDispatcherController" class="org.cognoscenti.reportdispatcher.web.ReportDispatcherController">
+		<!-- <property name="service" ref="reportDispatchRecordService" /> -->
+    </bean>
+    
 	<!-- 
 		This bean is used to tell Spring where to look for resources (i.e., JSP files)
 		when a controller returns a String literal that will probably match a resource 
