@@ -13,6 +13,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * Represents a report dispatch record which contains 
  * a list of {@link org.cognoscenti.reportdispatcher.domain.Attachment}S 
@@ -30,8 +34,8 @@ public class ReportDispatchRecord {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long reportDispatchRecordId;
 	
-	@NotNull
-	@Size(min=3, max=20)
+	@NotBlank(message="Name should not be blank")
+	@Size(message="Length of name must be at least 3 letters and maximum of 20 letters", min=3, max=20)
 	@Column(name="NAME")	
 	private String name;
 	
@@ -42,16 +46,17 @@ public class ReportDispatchRecord {
 	@CollectionTable(name="ATTACHMENT")
 	private List<String> attachments;
 	
-	@Size(min=1)
+	@Size(message="Please specify at least 1 email", min=1)
 	@ElementCollection
 	@CollectionTable(name="EMAIL")
 	private List<String> emails;
 	
-	@NotNull
-	@Size(min=10, max=50)
+	@NotBlank(message="Schedule should not be blank")
+	@Size(message="Invalid schedule. Please provide a correct cron expression.", min=10, max=50)
 	@Column(name="CRON_SCHEDULE")
 	private String cronSchedule;
 	
+	@NotBlank(message="Subject should not be blank")
 	@Column(name="SUBJECT")
 	private String subject;
 	

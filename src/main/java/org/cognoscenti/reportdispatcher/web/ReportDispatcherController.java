@@ -4,10 +4,20 @@ import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.cognoscenti.reportdispatcher.domain.ReportDispatchRecord;
+import org.cognoscenti.reportdispatcher.job.ReportDispatcherJob;
 import org.cognoscenti.reportdispatcher.service.ReportDispatchRecordService;
+import org.cognoscenti.reportdispatcher.service.SchedulerService;
+import org.quartz.CronTrigger;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerFactory;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
+import org.springframework.scheduling.quartz.CronTriggerBean;
+import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ReportDispatcherController {
 	private final Logger logger = Logger.getLogger(getClass());
 	private ReportDispatchRecordService reportDispatchRecordService;
+	private SchedulerService schedulerService;
 	
 	@RequestMapping(value="/home", method=RequestMethod.GET)
 	public String displayHomePage(Model model) {
@@ -32,7 +43,7 @@ public class ReportDispatcherController {
 	}
 	
 	@RequestMapping(value="/record/new", method=RequestMethod.POST)
-	public String submitReportDispatchRecordForm(@Valid ReportDispatchRecord record, BindingResult result, Model model) {
+	public String submitReportDispatchRecordForm(@ModelAttribute("record") @Valid ReportDispatchRecord record, BindingResult result, Model model) {
 		logger.info("Submitted form values for ReportDispatchRecordForm: " + record);
 		if(result.hasErrors()) {
 			logger.info(result.getAllErrors());
@@ -42,6 +53,8 @@ public class ReportDispatcherController {
 		}
 		
 		reportDispatchRecordService.addReportDispatchRecord(record);
+		schedulerService.createSchedule(record);
+		
 		return "redirect:/rds/home";
 	}
 	
@@ -85,5 +98,19 @@ public class ReportDispatcherController {
 	 */
 	public void setService(ReportDispatchRecordService service) {
 		this.reportDispatchRecordService = service;
+	}
+
+	/**
+	 * @return the schedulerService
+	 */
+	public SchedulerService getSchedulerService() {
+		return schedulerService;
+	}
+
+	/**
+	 * @param schedulerService the schedulerService to set
+	 */
+	public void setSchedulerService(SchedulerService schedulerService) {
+		this.schedulerService = schedulerService;
 	}
 }

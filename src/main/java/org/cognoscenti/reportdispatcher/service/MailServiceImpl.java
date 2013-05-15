@@ -128,4 +128,13 @@ public class MailServiceImpl implements MailService {
 	public void setProps(Properties props) {
 		this.props = props;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "MailServiceImpl [username=" + username + ", password="
+				+ password + ", props=" + props + "]";
+	}
 }

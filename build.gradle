@@ -26,12 +26,15 @@ dependencies {
 	
 	providedCompile "mysql:mysql-connector-java:5.1.23"
 	
+	compile "org.quartz-scheduler:quartz:1.8.6"
+	
 	compile "log4j:log4j:1.2.16"
 	compile "org.slf4j:slf4j-api:1.7.2"
 	compile "org.slf4j:slf4j-log4j12:1.7.2"
 	
 	compile "org.springframework:spring-core:$springVersion"
 	compile "org.springframework:spring-context:$springVersion"
+	compile "org.springframework:spring-context-support:$springVersion"
 	compile "org.springframework:spring-jdbc:$springVersion"
 	compile "org.springframework:spring-web:$springVersion"
 	compile "org.springframework:spring-webmvc:$springVersion"
@@ -43,7 +46,7 @@ dependencies {
 	runtime "org.hibernate:hibernate-entitymanager:4.1.10.Final"
 	
 	compile "javax.validation:validation-api:1.0.0.GA"
-	runtime "org.hibernate:hibernate-validator:4.3.1.Final"
+	compile "org.hibernate:hibernate-validator:4.3.1.Final"
 	
 	compile "javax.mail:mail:1.4.7"
 	
@@ -52,8 +55,10 @@ dependencies {
 
 task tomcopy( type: Copy ) {
 	from "$buildDir/libs/"
-    into "C:/Documents and Settings/Administrator/My Documents/Java/apache-tomcat-7.0.32/webapps"
+    into "D:/Java/apache-tomcat-7.0.32/webapps"
     include '*.war'
+    
+    rename '.+', 'rds.war'
 }
 
 tomcopy.dependsOn war

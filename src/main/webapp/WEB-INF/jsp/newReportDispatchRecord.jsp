@@ -13,12 +13,18 @@
 <script type="text/javascript" src="<c:url value="/js/jquery-ui-1.10.3.custom.min.js" />"></script>
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
+		var attachmentTextbox = 2;
+		
 		$("input#submitButton").button().click(function() {
 			$('form#record').submit();
 		});
 		
 		$("input#resetButton").button().click(function() {
 			$('form#record').reset();
+		});
+		
+		$("input#addMoreAttachment").button().click(function() {
+			
 		});
 	});
 </script>
@@ -38,19 +44,19 @@
 									</td>
 								</tr>
 								<tr>
-									<td align="left">Name:</td>
+									<td align="left">Name*:</td>
 									<td align="left"><form:input path="name" autocomplete="off" maxlength="50" /></td>
 									<td align="left">Description:</td>
 									<td align="left"><form:input path="description" autocomplete="off" maxlength="50" /></td>
 								</tr>
 								<tr>
-									<td align="left">Subject:</td>
+									<td align="left">Subject*:</td>
 									<td align="left"><form:input path="subject" autocomplete="off" maxlength="50" /></td>
 									<td align="left">Message:</td>
 									<td align="left"><form:input path="message" autocomplete="off" maxlength="50" /></td>
 								</tr>
 								<tr>
-									<td align="left">Schedule:</td>
+									<td align="left">Schedule*:</td>
 									<td align="left" colspan="3"><form:input path="cronSchedule" autocomplete="off" maxlength="50" /></td>
 								</tr>
 								<tr>
@@ -61,15 +67,20 @@
 										<form:input id="attachment3" path="attachments[2]" autocomplete="off" maxlength="50" />
 										<form:input id="attachment4" path="attachments[3]" autocomplete="off" maxlength="50" />
 										<form:input id="attachment5" path="attachments[4]" autocomplete="off" maxlength="50" /> --%>
-										<c:if test="${ not empty attachments }">
-											<c:forEach var="attachment" items="${ attachments }" varStatus="status">
-												<form:input id="attachment${ status.count }" path="attachments[${ status.index }]" autocomplete="off" maxlength="50" />
-											</c:forEach>
-										</c:if>
+										<div id="attachmentsDiv">
+											<c:if test="${ not empty record.attachments }">
+												<c:forEach var="attachment" items="${ record.attachments }" varStatus="status">
+													<form:input id="attachment${ status.count }" path="attachments[${ status.index }]" autocomplete="off" maxlength="50" />
+												</c:forEach>
+											</c:if>
+											
+											<c:if test="${ empty record.attachments }">
+												<form:input id="attachment1" path="attachments[0]" autocomplete="off" maxlength="50" />
+											</c:if>
+										</div>
 										
-										<c:if test="${ empty attachments }">
-											<form:input id="attachment1" path="attachments[0]" autocomplete="off" maxlength="50" />
-										</c:if>
+										<br />
+										<input id="addMoreAttachment" type="button" />
 									</td>
 									<td align="left">Emails:</td>
 									<td align="left">
