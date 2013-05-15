@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
 				http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
-	<persistence-unit name="eventual-reads-short-deadlines">
+	<!-- <persistence-unit name="eventual-reads-short-deadlines">
         <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
         <properties>
             <property name="datanucleus.NontransactionalRead" value="true"/>
@@ -15,5 +15,14 @@
             <property name="datanucleus.datastoreWriteTimeout" value="10000" />
             <property name="datanucleus.singletonEMFForName" value="true"/>
         </properties>
-    </persistence-unit>
+    </persistence-unit> -->
+    <persistence-unit name="report-dispatcher-system" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+		</properties>
+	</persistence-unit>
 </persistence>

@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.cognoscenti.reportdispatcher.domain.Attachment;
 import org.cognoscenti.reportdispatcher.domain.ReportDispatchRecord;
 
 public class Main {
 	public static void main(String[] args) {
-		ReportDispatchRecordServiceImpl service = new ReportDispatchRecordServiceImpl();
-		service.setUsername("cognoscentisoftware@gmail.com");
-		service.setPassword("cognoscenti123789");
+		MailServiceImpl mailService = new MailServiceImpl();
+		mailService.setUsername("cognoscentisoftware@gmail.com");
+		mailService.setPassword("cognoscenti123789");
 		
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -19,7 +18,7 @@ public class Main {
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.port", "587");
 		
-		service.setProps(props);
+		mailService.setProps(props);
 		
 		ReportDispatchRecord reportDispatchRecord = new ReportDispatchRecord();
 		List<String> emails = new ArrayList<String>();
@@ -28,10 +27,10 @@ public class Main {
 		emails.add("delasg@ph.ibm.com");
 		reportDispatchRecord.setEmails(emails);
 		
-		List<Attachment> attachments = new ArrayList<Attachment>();
-		attachments.add(new Attachment("/sample-mail-attachment.txt"));
+		List<String> attachments = new ArrayList<String>();
+		attachments.add("/sample-mail-attachment.txt");
 		reportDispatchRecord.setAttachments(attachments);
 		
-		service.sendMail(reportDispatchRecord);
+		mailService.sendMail(reportDispatchRecord);
 	}
 }

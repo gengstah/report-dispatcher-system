@@ -1,4 +1,50 @@
-body {
-	font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
-	font-size: 62.5%;
+body.standard {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
 }
+
+table.altrowstable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #a9c6c9;
+	border-collapse: collapse;
+}
+.oddrowcolor{
+	background-color:#FFFFFF;
+}
+
+.evenrowcolor{
+	background-color:#51A51C;
+}
+
+.error {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color: #D8000C;
+	background-color: #FFBABA;
+}
+
+.highlight {
+	background-color: #FFFF99;
+	cursor: pointer;
+}
+
+.ui-button { margin-left: -1px; }
+.ui-button-icon-only .ui-button-text { padding: 0.35em; } 
+.ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; }
+
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	/* add padding to account for vertical scrollbar */
+	padding-right: 20px;
+	height: 100px;
+}
+
+.ui-progressbar-value { background-image: url('images/pbar-ani.gif'); }
+.ui-timeProgressBar-value { background-image: url('images/pbar-ani.gif'); }
+.ui-expenseProgressBar-value { background-image: url('images/pbar-ani.gif'); }

@@ -24,8 +24,6 @@ dependencies {
 	testCompile "junit:junit:4.+"
 	testCompile "org.mockito:mockito-all:1.9.5"
 	
-	providedCompile "mysql:mysql-connector-java:5.1.23"
-	
 	compile "log4j:log4j:1.2.16"
 	compile "org.slf4j:slf4j-api:1.7.2"
 	compile "org.slf4j:slf4j-log4j12:1.7.2"
@@ -39,24 +37,23 @@ dependencies {
 	
 	compile "jstl:jstl:1.2"
 	
-	compile "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final"
-	runtime "org.hibernate:hibernate-entitymanager:4.1.10.Final"
+	compile fileTree(dir: 'lib', includes: ['*.jar'])
+	compile "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1"
+	runtime "org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1"
+	runtime "org.datanucleus:datanucleus-core:3.2.2"
+	runtime "org.datanucleus:datanucleus-api-jpa:3.2.1"
+	runtime "org.datanucleus:datanucleus-api-jdo:3.2.1"
+	runtime "javax.jdo:jdo2-api:2.3-eb"
+	runtime "javax.transaction:jta:1.1"
+	runtime 'com.google.inject.extensions:guice-servlet:3.0'
+	runtime files("C:/Documents and Settings/Administrator/My Documents/Java/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.7.1/appengine-java-sdk-1.7.7.1/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.1.2.jar")
 	
 	compile "javax.validation:validation-api:1.0.0.GA"
 	runtime "org.hibernate:hibernate-validator:4.3.1.Final"
 	
 	compile "javax.mail:mail:1.4.7"
-	
-	runtime "org.aspectj:aspectjweaver:1.7.2"
 }
 
-task tomcopy( type: Copy ) {
-	from "$buildDir/libs/"
-    into "C:/Documents and Settings/Administrator/My Documents/Java/apache-tomcat-7.0.32/webapps"
-    include '*.war'
-}
-
-tomcopy.dependsOn war
 
 task wrapper(type: Wrapper) {
 	description = 'Generates gradlew[.bat] scripts'
@@ -91,5 +88,5 @@ gae {
 }
 
 jettyRun {
-    contextPath = "/report"
+    contextPath = "/"
 }

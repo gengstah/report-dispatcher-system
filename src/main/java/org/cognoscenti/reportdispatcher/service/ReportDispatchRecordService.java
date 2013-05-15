@@ -8,7 +8,6 @@ public interface ReportDispatchRecordService {
 	ReportDispatchRecord addReportDispatchRecord(ReportDispatchRecord o);
 	ReportDispatchRecord updateReportDispatchRecord(ReportDispatchRecord o);
 	void removeReportDispatchRecord(ReportDispatchRecord o);
-	ReportDispatchRecord getReportDispatchRecord(ReportDispatchRecord id);
+	ReportDispatchRecord getReportDispatchRecord(Long id);
 	List<ReportDispatchRecord> listReportDispatchRecord();
-	void sendMail(ReportDispatchRecord reportDispatchRecord);
 }

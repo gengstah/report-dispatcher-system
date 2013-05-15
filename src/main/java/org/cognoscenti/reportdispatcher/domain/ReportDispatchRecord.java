@@ -6,12 +6,12 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Represents a report dispatch record which contains 
@@ -28,40 +28,52 @@ public class ReportDispatchRecord {
 	@Id
 	@Column(name="REPORT_DISPATCH_ID")
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int reportDispatchRecordId;
+	private Long reportDispatchRecordId;
 	
-	@Column(name="NAME")
+	@NotNull
+	@Size(min=3, max=20)
+	@Column(name="NAME")	
 	private String name;
 	
 	@Column(name="DESCRIPTION")
 	private String description;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="reportDispatchRecord")
-	private List<Attachment> attachments;
+	@ElementCollection
+	@CollectionTable(name="ATTACHMENT")
+	private List<String> attachments;
 	
+	@Size(min=1)
 	@ElementCollection
 	@CollectionTable(name="EMAIL")
 	private List<String> emails;
 	
+	@NotNull
+	@Size(min=10, max=50)
 	@Column(name="CRON_SCHEDULE")
 	private String cronSchedule;
 	
+	@Column(name="SUBJECT")
+	private String subject;
+	
+	@Column(name="MESSAGE")
+	private String message;
+	
 	/**
-	 * Default constructor
+	 * Default constructor	 
 	 */
 	public ReportDispatchRecord() { }
 
 	/**
 	 * @return the reportDispatchRecordId
 	 */
-	public int getReportDispatchRecordId() {
+	public Long getReportDispatchRecordId() {
 		return reportDispatchRecordId;
 	}
 
 	/**
 	 * @param reportDispatchRecordId the reportDispatchRecordId to set
 	 */
-	public void setReportDispatchRecordId(int reportDispatchRecordId) {
+	public void setReportDispatchRecordId(Long reportDispatchRecordId) {
 		this.reportDispatchRecordId = reportDispatchRecordId;
 	}
 
@@ -96,14 +108,14 @@ public class ReportDispatchRecord {
 	/**
 	 * @return the attachments
 	 */
-	public List<Attachment> getAttachments() {
+	public List<String> getAttachments() {
 		return attachments;
 	}
 
 	/**
 	 * @param attachments the attachments to set
 	 */
-	public void setAttachments(List<Attachment> attachments) {
+	public void setAttachments(List<String> attachments) {
 		this.attachments = attachments;
 	}
 
@@ -135,12 +147,43 @@ public class ReportDispatchRecord {
 		this.cronSchedule = cronSchedule;
 	}
 
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "ReportDispatchRecord [attachments=" + attachments + ", emails="
-				+ emails + ", cronSchedule=" + cronSchedule + "]";
+		return "ReportDispatchRecord [reportDispatchRecordId="
+				+ reportDispatchRecordId + ", name=" + name + ", description="
+				+ description + ", attachments=" + attachments + ", emails="
+				+ emails + ", cronSchedule=" + cronSchedule + ", subject="
+				+ subject + ", message=" + message + "]";
 	}
 }
