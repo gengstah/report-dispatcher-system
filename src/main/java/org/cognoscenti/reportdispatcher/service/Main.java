@@ -21,16 +21,23 @@ public class Main {
 		mailService.setProps(props);
 		
 		ReportDispatchRecord reportDispatchRecord = new ReportDispatchRecord();
+		reportDispatchRecord.setReportDispatchRecordId(1L);
 		List<String> emails = new ArrayList<String>();
 		emails.add("cognoscentisoftware@gmail.com");
 		emails.add("gerardpdelasarmas@gmail.com");
 		emails.add("delasg@ph.ibm.com");
 		reportDispatchRecord.setEmails(emails);
+		reportDispatchRecord.setCronSchedule("0 * * * * ?");
 		
 		List<String> attachments = new ArrayList<String>();
-		attachments.add("/sample-mail-attachment.txt");
+		attachments.add("sample-mail-attachment.txt");
 		reportDispatchRecord.setAttachments(attachments);
 		
-		mailService.sendMail(reportDispatchRecord);
+		/*mailService.sendMail(reportDispatchRecord);*/
+		
+		SchedulerServiceImpl scheduler = new SchedulerServiceImpl();
+		scheduler.setMailService(mailService);
+		
+		scheduler.schedule(reportDispatchRecord);
 	}
 }

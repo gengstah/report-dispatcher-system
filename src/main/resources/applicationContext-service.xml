@@ -5,7 +5,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util
-		http://www.springframework.org/schema/util/spring-util.xsd">
+		http://www.springframework.org/schema/util/spring-util.xsd" 
+	default-init-method="init" default-destroy-method="destroy">
 	
     <util:properties id="mailProps" location="classpath:mail.properties" />
 	<bean id="reportDispatchRecordService" class="org.cognoscenti.reportdispatcher.service.ReportDispatchRecordServiceImpl">
@@ -19,6 +20,8 @@
 	</bean>
 	
 	<bean id="schedulerService" class="org.cognoscenti.reportdispatcher.service.SchedulerServiceImpl">
+	    <property name="reportDispatchRecordService" ref="reportDispatchRecordService" />
 		<property name="mailService" ref="mailService" />
+		<property name="autoStart" value="true" />
 	</bean>
 </beans>

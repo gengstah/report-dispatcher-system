@@ -1,19 +1,13 @@
 package org.cognoscenti.reportdispatcher.web;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.cognoscenti.reportdispatcher.domain.ReportDispatchRecord;
-import org.cognoscenti.reportdispatcher.job.ReportDispatcherJob;
 import org.cognoscenti.reportdispatcher.service.ReportDispatchRecordService;
 import org.cognoscenti.reportdispatcher.service.SchedulerService;
-import org.quartz.CronTrigger;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerFactory;
-import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
-import org.springframework.scheduling.quartz.CronTriggerBean;
-import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,9 +24,19 @@ public class ReportDispatcherController {
 	
 	@RequestMapping(value="/home", method=RequestMethod.GET)
 	public String displayHomePage(Model model) {
-		model.addAttribute("reportDispatchRecords", reportDispatchRecordService.listReportDispatchRecord());
+		List<ReportDispatchRecord> reportDispatchRecords = reportDispatchRecordService.listReportDispatchRecord();
+		setTriggerStatus(reportDispatchRecords);
+		
+		model.addAttribute("reportDispatchRecords", reportDispatchRecords);
 		
 		return "home";
+	}
+
+	private void setTriggerStatus(
+			List<ReportDispatchRecord> reportDispatchRecords) {
+		for(ReportDispatchRecord reportDispatchRecord : reportDispatchRecords) {
+			reportDispatchRecord.setActive(schedulerService.isActive(reportDispatchRecord));
+		}
 	}
 	
 	@RequestMapping(value="/record/new", method=RequestMethod.GET)
@@ -53,14 +57,15 @@ public class ReportDispatcherController {
 		}
 		
 		reportDispatchRecordService.addReportDispatchRecord(record);
-		schedulerService.createSchedule(record);
+		schedulerService.schedule(record);
 		
 		return "redirect:/rds/home";
 	}
 	
 	@RequestMapping(value="/record/update/{id}", method=RequestMethod.GET)
 	public String displayUpdateReportDispatchRecordForm(@PathVariable Long id, Model model) {
-		model.addAttribute("record", reportDispatchRecordService.getReportDispatchRecord(id));
+		ReportDispatchRecord reportDispatchRecord = reportDispatchRecordService.getReportDispatchRecord(id);
+		model.addAttribute("record", reportDispatchRecord);
 		
 		return "newReportDispatchRecord";
 	}
@@ -82,6 +87,22 @@ public class ReportDispatcherController {
 	public String removeComplaintForm(@PathVariable Long id) {
 		ReportDispatchRecord record = reportDispatchRecordService.getReportDispatchRecord(id);
 		reportDispatchRecordService.removeReportDispatchRecord(record);
+		
+		return "redirect:/rds/home";
+	}
+	
+	@RequestMapping(value = "/record/start/{id}", method = RequestMethod.GET)
+	public String startScheduler(@PathVariable Long id) {
+		ReportDispatchRecord record = reportDispatchRecordService.getReportDispatchRecord(id);
+		schedulerService.start(record);
+		
+		return "redirect:/rds/home";
+	}
+	
+	@RequestMapping(value = "/record/stop/{id}", method = RequestMethod.GET)
+	public String stopScheduler(@PathVariable Long id) {
+		ReportDispatchRecord record = reportDispatchRecordService.getReportDispatchRecord(id);
+		schedulerService.stop(record);
 		
 		return "redirect:/rds/home";
 	}

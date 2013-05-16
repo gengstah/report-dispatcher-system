@@ -18,9 +18,12 @@
 
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
-		$("input#addNewRecordButton").button().click(function() {
+		$('input#addNewRecordButton').button().click(function() {
 			window.location = '<c:url value="/rds/record/new" />';
 		});
+		
+		$('input#startButton').button();
+		$('input#stopButton').button();
 		
 		oTable = $('#reportDispatchRecordTable').dataTable( {
 			"bPaginate": true,
@@ -37,31 +40,28 @@
 			<table cellpadding="0" cellspacing="0" border="0" class="display" id="reportDispatchRecordTable">
 				<thead>
 					<tr>
-						<th>ID</th>
 						<th>Name</th>
 						<th>Description</th>
 						<th>Schedule</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
-				<tr class="gradeX">
-					<td>1</td>
-					<td>Sample</td>
-					<td>Sample Description</td>
-					<td>Every Monday @ 1 PM</td>
-				</tr>
-				<c:forEach var="reportDispatchRecord" items="${ reportDispatchRecords }" varStatus="status">
-					<tr onMouseOver="this.className='highlight'" onMouseOut="this.className=''" onclick="window.location = '<c:url value='/rds/record/update/${reportDispatchRecord.reportDispatchRecordId}' />';">
-						<td><c:out value="${ reportDispatchRecord.reportDispatchRecordId }" /></td>
-						<td><c:out value="${ reportDispatchRecord.name }" /></td>
-						<td><c:out value="${ reportDispatchRecord.description }" /></td>
-						<td><c:out value="${ reportDispatchRecord.cronSchedule }" /></td>
+					<c:forEach var="reportDispatchRecord" items="${ reportDispatchRecords }" varStatus="status">
+						<tr onMouseOver="this.className='highlight'" onMouseOut="this.className=''">
+							<td><a href="<c:url value='/rds/record/update/${reportDispatchRecord.reportDispatchRecordId}' />"><c:out value="${ reportDispatchRecord.name }" /></a></td>
+							<td><c:out value="${ reportDispatchRecord.description }" /></td>
+							<td><c:out value="${ reportDispatchRecord.cronSchedule }" /></td>
+							<td>
+								<input id="startButton" type="button" <c:if test="${ reportDispatchRecord.active }">disabled="disabled"</c:if> value="Start" onclick="window.location = '<c:url value='/rds/record/start/${reportDispatchRecord.reportDispatchRecordId}' />';" />
+								<input id="stopButton" type="button" <c:if test="${ !reportDispatchRecord.active }">disabled="disabled"</c:if> value="Stop" onclick="window.location = '<c:url value='/rds/record/stop/${reportDispatchRecord.reportDispatchRecordId}' />';" />
+							</td>
+						</tr>
+					</c:forEach>
+					<tr>
+						<td colspan="3">&nbsp;</td>
+						<td align="right"><input id="addNewRecordButton" type="button" value="Add Record" /></td>
 					</tr>
-				</c:forEach>
-				<tr>
-					<td colspan="3">&nbsp;</td>
-					<td align="right"><input id="addNewRecordButton" type="button" value="Add Record" /></td>
-				</tr>
 				</tbody>
 			</table>
 		</div>

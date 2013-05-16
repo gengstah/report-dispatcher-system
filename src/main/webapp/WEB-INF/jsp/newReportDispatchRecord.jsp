@@ -12,9 +12,10 @@
 <script type="text/javascript" src="<c:url value="/js/jquery-1.9.1.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery-ui-1.10.3.custom.min.js" />"></script>
 <script type="text/javascript" charset="utf-8">
+	var attachmentTextboxCounter = 0;
+	var emailTextboxCounter = 0;
+
 	$(document).ready(function() {
-		var attachmentTextbox = 2;
-		
 		$("input#submitButton").button().click(function() {
 			$('form#record').submit();
 		});
@@ -24,7 +25,37 @@
 		});
 		
 		$("input#addMoreAttachment").button().click(function() {
+			var newTextBoxDiv = $(document.createElement('div'))
+				.attr("id", 'attachmentTextboxDiv' + attachmentTextboxCounter);
 			
+			newTextBoxDiv.after().html('<input type="text" name="attachments[' + (attachmentTextboxCounter - 1) + ']" autocomplete="off" maxlength="50" /><input type="button" id="removeAttachmentButton' + attachmentTextboxCounter + '" value="X" />');
+			
+			newTextBoxDiv.appendTo("#attachmentsDiv");
+			
+			$('input#removeAttachmentButton' + attachmentTextboxCounter).click(function() {
+				if(attachmentTextboxCounter>2) {
+					$('#attachmentTextboxDiv' + attachmentTextboxCounter--).remove();
+				}
+			});
+			
+			attachmentTextboxCounter++;
+		});
+		
+		$("input#addMoreEmail").button().click(function() {
+			var newTextBoxDiv = $(document.createElement('div'))
+				.attr("id", 'emailTextboxDiv' + emailTextboxCounter);
+			
+			newTextBoxDiv.after().html('<input type="text" name="emails[' + (emailTextboxCounter - 1) + ']" autocomplete="off" maxlength="50" /><input type="button" id="removeEmailButton' + emailTextboxCounter + '" value="X" />');
+			
+			newTextBoxDiv.appendTo("#emailsDiv");
+			
+			$('input#removeEmailButton' + emailTextboxCounter).click(function() {
+				if(emailTextboxCounter>2) {
+					$('#emailTextboxDiv' + emailTextboxCounter--).remove();
+				}
+			});
+			
+			emailTextboxCounter++;
 		});
 	});
 </script>
@@ -60,44 +91,47 @@
 									<td align="left" colspan="3"><form:input path="cronSchedule" autocomplete="off" maxlength="50" /></td>
 								</tr>
 								<tr>
-									<td align="left">Attachments:</td>
-									<td align="left">
-										<%-- <form:input id="attachment1" path="attachments[0]" autocomplete="off" maxlength="50" />
-										<form:input id="attachment2" path="attachments[1]" autocomplete="off" maxlength="50" />
-										<form:input id="attachment3" path="attachments[2]" autocomplete="off" maxlength="50" />
-										<form:input id="attachment4" path="attachments[3]" autocomplete="off" maxlength="50" />
-										<form:input id="attachment5" path="attachments[4]" autocomplete="off" maxlength="50" /> --%>
+									<td align="left" valign="top">Attachments:</td>
+									<td align="left">										
 										<div id="attachmentsDiv">
-											<c:if test="${ not empty record.attachments }">
-												<c:forEach var="attachment" items="${ record.attachments }" varStatus="status">
-													<form:input id="attachment${ status.count }" path="attachments[${ status.index }]" autocomplete="off" maxlength="50" />
-												</c:forEach>
-											</c:if>
-											
-											<c:if test="${ empty record.attachments }">
-												<form:input id="attachment1" path="attachments[0]" autocomplete="off" maxlength="50" />
-											</c:if>
+											<div id="attachmentTextboxDiv1">
+												<c:if test="${ not empty attachments }">
+													<c:forEach var="attachment" items="${ attachments }" varStatus="status">
+														<form:input path="attachments[${ status.index }]" autocomplete="off" maxlength="50" />
+														<script type="text/javascript" charset="utf-8">attachmentTextboxCounter++;</script>
+													</c:forEach>
+												</c:if>
+												
+												<c:if test="${ empty attachments }">
+													<form:input path="attachments[0]" autocomplete="off" maxlength="50" />
+													<script type="text/javascript" charset="utf-8">attachmentTextboxCounter++;</script>
+												</c:if>
+											</div>
 										</div>
 										
 										<br />
-										<input id="addMoreAttachment" type="button" />
+										<input id="addMoreAttachment" type="button" value="Add attachment" />
 									</td>
-									<td align="left">Emails:</td>
+									<td align="left" valign="top">Emails:</td>
 									<td align="left">
-										<%-- <form:input id="email1" path="emails[0]" autocomplete="off" maxlength="50" />
-										<form:input id="email2" path="emails[1]" autocomplete="off" maxlength="50" />
-										<form:input id="email3" path="emails[2]" autocomplete="off" maxlength="50" />
-										<form:input id="email4" path="emails[3]" autocomplete="off" maxlength="50" />
-										<form:input id="email5" path="emails[4]" autocomplete="off" maxlength="50" /> --%>
-										<c:if test="${ not empty emails }">
-											<c:forEach var="email" items="${ emails }" varStatus="status">
-												<form:input id="email${ status.count }" path="emails[${ status.index }]" autocomplete="off" maxlength="50" />
-											</c:forEach>
-										</c:if>
+										<div id="emailsDiv">
+											<div id="emailTextboxDiv1">
+												<c:if test="${ not empty emails }">
+													<c:forEach var="email" items="${ emails }" varStatus="status">
+														<form:input id="email${ status.count }" path="emails[${ status.index }]" autocomplete="off" maxlength="50" />
+														<script type="text/javascript" charset="utf-8">emailTextboxCounter++;</script>
+													</c:forEach>
+												</c:if>
+												
+												<c:if test="${ empty emails }">
+													<form:input path="emails[0]" autocomplete="off" maxlength="50" />
+													<script type="text/javascript" charset="utf-8">emailTextboxCounter++;</script>
+												</c:if>
+											</div>
+										</div>
 										
-										<c:if test="${ empty emails }">
-											<form:input id="email1" path="emails[0]" autocomplete="off" maxlength="50" />
-										</c:if>
+										<br />
+										<input id="addMoreEmail" type="button" value="Add email" />
 									</td>
 								</tr>
 								<tr>

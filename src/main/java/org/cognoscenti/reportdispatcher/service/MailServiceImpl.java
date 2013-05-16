@@ -55,11 +55,11 @@ public class MailServiceImpl implements MailService {
 			}
 			
 			logger.info("Setting the subject for the mail");
-			message.setSubject("Testing Subject");
+			message.setSubject(reportDispatchRecord.getSubject());
 			
 			logger.info("Setting the body for the mail");			
 			MimeBodyPart messageBodyPart = new MimeBodyPart();
-			messageBodyPart.setText("Hi");
+			messageBodyPart.setText(reportDispatchRecord.getMessage());
 			
 			Multipart multipart = new MimeMultipart();
 		    multipart.addBodyPart(messageBodyPart);

@@ -10,12 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Represents a report dispatch record which contains 
@@ -62,6 +60,9 @@ public class ReportDispatchRecord {
 	
 	@Column(name="MESSAGE")
 	private String message;
+	
+	@Transient
+	private boolean active;
 	
 	/**
 	 * Default constructor	 
@@ -180,6 +181,20 @@ public class ReportDispatchRecord {
 		this.message = message;
 	}
 
+	/**
+	 * @return the active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * @param active the active to set
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -189,6 +204,6 @@ public class ReportDispatchRecord {
 				+ reportDispatchRecordId + ", name=" + name + ", description="
 				+ description + ", attachments=" + attachments + ", emails="
 				+ emails + ", cronSchedule=" + cronSchedule + ", subject="
-				+ subject + ", message=" + message + "]";
+				+ subject + ", message=" + message + ", active=" + active + "]";
 	}
 }

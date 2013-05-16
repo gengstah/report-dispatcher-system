@@ -32,7 +32,11 @@ public class ReportDispatchRecordServiceImpl implements
 	@Override
 	public ReportDispatchRecord getReportDispatchRecord(Long id) {
 		logger.info("Fetching a ReportDispatchRecord: " + id);
-		return dao.get(id, ReportDispatchRecord.class);
+		
+		ReportDispatchRecord reportDispatchRecord = dao.get(id, ReportDispatchRecord.class);
+		fetchLazyCollections(reportDispatchRecord);
+		
+		return reportDispatchRecord;
 	}
 
 	@Override
@@ -42,16 +46,20 @@ public class ReportDispatchRecordServiceImpl implements
 		
 		logger.info("Fetching all lazy element collection");
 		for(ReportDispatchRecord reportDispatchRecord : reportDispatchRecords) {
-			for(String email : reportDispatchRecord.getEmails()) {
-				logger.info(email.toString());
-			}
-			
-			for(String attachment : reportDispatchRecord.getAttachments()) {
-				logger.info(attachment.toString());
-			}
+			fetchLazyCollections(reportDispatchRecord);
 		}
 		
 		return reportDispatchRecords;
+	}
+
+	private void fetchLazyCollections(ReportDispatchRecord reportDispatchRecord) {
+		for(String email : reportDispatchRecord.getEmails()) {
+			logger.info(email.toString());
+		}
+		
+		for(String attachment : reportDispatchRecord.getAttachments()) {
+			logger.info(attachment.toString());
+		}
 	}
 
 	/**
