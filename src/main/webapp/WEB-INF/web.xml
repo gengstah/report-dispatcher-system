@@ -39,6 +39,7 @@
           classpath:applicationContext-orm.xml
           classpath:applicationContext-service.xml
           classpath:applicationContext-tx.xml
+          classpath:applicationContext-validator.xml
       </param-value>
     </context-param>
   <!-- ========================================================== -->

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.cognoscenti.reportdispatcher.domain.ReportDispatchRecord;
 import org.cognoscenti.reportdispatcher.job.ReportDispatcherJob;
+import org.quartz.CronExpression;
 import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -52,7 +53,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 		List<ReportDispatchRecord> reportDispatchRecords = reportDispatchRecordService.listReportDispatchRecord();
 		
 		for(ReportDispatchRecord reportDispatchRecord : reportDispatchRecords) {
-			schedule(reportDispatchRecord);
+			addSchedule(reportDispatchRecord);
 			
 			logger.info(reportDispatchRecord + " has been added to the scheduler");
 		}
@@ -89,7 +90,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void schedule(ReportDispatchRecord reportDispatchRecord) {
+	public void addSchedule(ReportDispatchRecord reportDispatchRecord) {
 		logger.info("Constructing JobDetailBean");
 		JobDetailBean jobDetail = new JobDetailBean();
         jobDetail.setName(REPORT_DISPATCH + reportDispatchRecord.getReportDispatchRecordId());
@@ -111,6 +112,22 @@ public class SchedulerServiceImpl implements SchedulerService {
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) { logger.error(e.getMessage()); 
         } catch (ParseException e) { logger.error(e.getMessage()); }
+	}
+	
+	@Override
+	public void updateSchedule(ReportDispatchRecord reportDispatchRecord) {
+		try {
+			scheduler.deleteJob(REPORT_DISPATCH + reportDispatchRecord.getReportDispatchRecordId(), REPORT_DISPATCH_GROUP);
+		} catch (SchedulerException e) { logger.error(e.getMessage()); }
+		
+		addSchedule(reportDispatchRecord);
+	}
+	
+	@Override
+	public void removeSchedule(ReportDispatchRecord reportDispatchRecord) {
+		try {
+			scheduler.deleteJob(REPORT_DISPATCH + reportDispatchRecord.getReportDispatchRecordId(), REPORT_DISPATCH_GROUP);
+		} catch (SchedulerException e) { logger.error(e.getMessage()); }
 	}
 	
 	@Override
@@ -143,6 +160,10 @@ public class SchedulerServiceImpl implements SchedulerService {
 		} catch (SchedulerException e) { logger.error(e.getMessage()); }
 		
 		return false;
+	}
+	
+	public static boolean isValidCronExpression(String cronExpression) {
+		return CronExpression.isValidExpression(cronExpression);
 	}
 
 	/**

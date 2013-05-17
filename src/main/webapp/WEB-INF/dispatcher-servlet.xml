@@ -15,6 +15,7 @@
     <bean id="reportDispatcherController" class="org.cognoscenti.reportdispatcher.web.ReportDispatcherController">
 		<property name="service" ref="reportDispatchRecordService" />
 		<property name="schedulerService" ref="schedulerService" />
+		<property name="reportDispatchRecordValidator" ref="reportDispatchRecordValidator" />
     </bean>
     
 	<!-- 

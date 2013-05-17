@@ -50,8 +50,7 @@ public class MailServiceImpl implements MailService {
 			
 			for(String email : emails) {
 				logger.info("Adding " + email + " as recipient");
-				message.setRecipients(Message.RecipientType.TO,
-						InternetAddress.parse(email));
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
 			}
 			
 			logger.info("Setting the subject for the mail");

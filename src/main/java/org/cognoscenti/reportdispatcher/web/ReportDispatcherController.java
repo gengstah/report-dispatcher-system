@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.cognoscenti.reportdispatcher.domain.ReportDispatchRecord;
 import org.cognoscenti.reportdispatcher.service.ReportDispatchRecordService;
 import org.cognoscenti.reportdispatcher.service.SchedulerService;
+import org.cognoscenti.reportdispatcher.validator.ReportDispatchRecordValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ public class ReportDispatcherController {
 	private final Logger logger = Logger.getLogger(getClass());
 	private ReportDispatchRecordService reportDispatchRecordService;
 	private SchedulerService schedulerService;
+	private ReportDispatchRecordValidator reportDispatchRecordValidator;
 	
 	@RequestMapping(value="/home", method=RequestMethod.GET)
 	public String displayHomePage(Model model) {
@@ -50,14 +52,17 @@ public class ReportDispatcherController {
 	public String submitReportDispatchRecordForm(@ModelAttribute("record") @Valid ReportDispatchRecord record, BindingResult result, Model model) {
 		logger.info("Submitted form values for ReportDispatchRecordForm: " + record);
 		if(result.hasErrors()) {
-			logger.info(result.getAllErrors());
-			model.addAttribute("record", record);
+			return goBackToForm(record, result, model);
+		} else {
+			reportDispatchRecordValidator.validate(record, result);
 			
-			return "newReportDispatchRecord";
+			if(result.hasErrors()) {
+				return goBackToForm(record, result, model);
+			}
 		}
 		
 		reportDispatchRecordService.addReportDispatchRecord(record);
-		schedulerService.schedule(record);
+		schedulerService.addSchedule(record);
 		
 		return "redirect:/rds/home";
 	}
@@ -71,22 +76,37 @@ public class ReportDispatcherController {
 	}
 	
 	@RequestMapping(value="/record/update/{id}", method=RequestMethod.POST)
-	public String submitUpdateReportDispatchRecordForm(@Valid ReportDispatchRecord record, BindingResult result, Model model) {
-		logger.info("Submitted form values for ReportDispatchRecordForm: " + record);
+	public String submitUpdateReportDispatchRecordForm(@ModelAttribute("record") @Valid ReportDispatchRecord record, BindingResult result, Model model) {
+		logger.info("Submitted form values for ReportDispatchRecordForm: " + record);		
 		if(result.hasErrors()) {
-			model.addAttribute("record", record);
+			return goBackToForm(record, result, model);
+		} else {
+			reportDispatchRecordValidator.validate(record, result);
 			
-			return "newReportDispatchRecord";
+			if(result.hasErrors()) {
+				return goBackToForm(record, result, model);
+			}
 		}
 		
 		reportDispatchRecordService.updateReportDispatchRecord(record);
+		schedulerService.updateSchedule(record);
+		
 		return "redirect:/rds/home";
+	}
+
+	private String goBackToForm(ReportDispatchRecord record,
+			BindingResult result, Model model) {
+		logger.info(result.getAllErrors());
+		model.addAttribute("record", record);
+		
+		return "newReportDispatchRecord";
 	}
 	
 	@RequestMapping(value = "/record/delete/{id}", method = RequestMethod.GET)
 	public String removeComplaintForm(@PathVariable Long id) {
 		ReportDispatchRecord record = reportDispatchRecordService.getReportDispatchRecord(id);
 		reportDispatchRecordService.removeReportDispatchRecord(record);
+		schedulerService.removeSchedule(record);
 		
 		return "redirect:/rds/home";
 	}
@@ -133,5 +153,20 @@ public class ReportDispatcherController {
 	 */
 	public void setSchedulerService(SchedulerService schedulerService) {
 		this.schedulerService = schedulerService;
+	}
+
+	/**
+	 * @return the reportDispatchRecordValidator
+	 */
+	public ReportDispatchRecordValidator getReportDispatchRecordValidator() {
+		return reportDispatchRecordValidator;
+	}
+
+	/**
+	 * @param reportDispatchRecordValidator the reportDispatchRecordValidator to set
+	 */
+	public void setReportDispatchRecordValidator(
+			ReportDispatchRecordValidator reportDispatchRecordValidator) {
+		this.reportDispatchRecordValidator = reportDispatchRecordValidator;
 	}
 }

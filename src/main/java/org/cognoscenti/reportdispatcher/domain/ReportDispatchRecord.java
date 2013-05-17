@@ -1,5 +1,6 @@
 package org.cognoscenti.reportdispatcher.domain;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.persistence.CollectionTable;
@@ -11,9 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.quartz.CronExpression;
 
 /**
  * Represents a report dispatch record which contains 
@@ -33,7 +34,6 @@ public class ReportDispatchRecord {
 	private Long reportDispatchRecordId;
 	
 	@NotBlank(message="Name should not be blank")
-	@Size(message="Length of name must be at least 3 letters and maximum of 20 letters", min=3, max=20)
 	@Column(name="NAME")	
 	private String name;
 	
@@ -44,13 +44,11 @@ public class ReportDispatchRecord {
 	@CollectionTable(name="ATTACHMENT")
 	private List<String> attachments;
 	
-	@Size(message="Please specify at least 1 email", min=1)
 	@ElementCollection
 	@CollectionTable(name="EMAIL")
 	private List<String> emails;
 	
 	@NotBlank(message="Schedule should not be blank")
-	@Size(message="Invalid schedule. Please provide a correct cron expression.", min=10, max=50)
 	@Column(name="CRON_SCHEDULE")
 	private String cronSchedule;
 	
@@ -63,6 +61,9 @@ public class ReportDispatchRecord {
 	
 	@Transient
 	private boolean active;
+	
+	@Transient
+	private CronExpression cronExpression;
 	
 	/**
 	 * Default constructor	 
@@ -150,6 +151,7 @@ public class ReportDispatchRecord {
 	 * @param cronSchedule the cronSchedule to set
 	 */
 	public void setCronSchedule(String cronSchedule) {
+		try { cronExpression = new CronExpression(cronSchedule); } catch (ParseException e) { }
 		this.cronSchedule = cronSchedule;
 	}
 
@@ -193,6 +195,13 @@ public class ReportDispatchRecord {
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	/**
+	 * @return the cronExpression
+	 */
+	public String getScheduleDescription() {
+		return cronExpression.getExpressionSummary();
 	}
 
 	/* (non-Javadoc)

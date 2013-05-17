@@ -27,7 +27,7 @@ public class Main {
 		emails.add("gerardpdelasarmas@gmail.com");
 		emails.add("delasg@ph.ibm.com");
 		reportDispatchRecord.setEmails(emails);
-		reportDispatchRecord.setCronSchedule("0 * * * * ?");
+		reportDispatchRecord.setCronSchedule("59 * * * * ?");
 		
 		List<String> attachments = new ArrayList<String>();
 		attachments.add("sample-mail-attachment.txt");
@@ -38,6 +38,7 @@ public class Main {
 		SchedulerServiceImpl scheduler = new SchedulerServiceImpl();
 		scheduler.setMailService(mailService);
 		
-		scheduler.schedule(reportDispatchRecord);
+		//scheduler.addSchedule(reportDispatchRecord);
+		System.out.println(reportDispatchRecord.getScheduleDescription());
 	}
 }
