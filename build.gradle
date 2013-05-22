@@ -55,7 +55,7 @@ dependencies {
 
 task tomcopy( type: Copy ) {
 	from "$buildDir/libs/"
-    into "C:/Documents and Settings/Administrator/My Documents/Java/apache-tomcat-7.0.32/webapps"
+    into "D:/java/apache-tomcat-7.0.32/webapps"
     include '*.war'
     
     rename '.+', 'rds.war'

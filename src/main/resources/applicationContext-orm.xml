@@ -28,8 +28,11 @@
 		<property name="defaultDataSource" ref="dataSource"/>
 	</bean>
 	
+	<!-- <bean id="loadTimeWeaver" class="org.springframework.instrument.classloading.SimpleLoadTimeWeaver" /> -->
+	
 	<bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="persistenceUnitManager" ref="pum"/>
+		<!-- <property name="loadTimeWeaver" ref="loadTimeWeaver" /> -->
 	</bean>
 	
 	<bean id="reportDispatchRecordDao" class="org.cognoscenti.reportdispatcher.dao.ReportDispatchRecordDao" />

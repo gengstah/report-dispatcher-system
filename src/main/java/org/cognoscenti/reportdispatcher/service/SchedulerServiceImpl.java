@@ -17,6 +17,13 @@ import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.scheduling.quartz.JobDetailBean;
 
+/**
+ * Default implementation of {@link org.cognoscenti.reportdispatcher.service.SchedulerService}
+ * 
+ * @author Geng
+ * @version 1.0
+ * @see org.cognoscenti.reportdispatcher.service.SchedulerService
+ */
 public class SchedulerServiceImpl implements SchedulerService {
 	private final Logger logger = Logger.getLogger(getClass());
 	public static final String REPORT_DISPATCH = "REPORT DISPATCH";
@@ -27,6 +34,14 @@ public class SchedulerServiceImpl implements SchedulerService {
     private Scheduler scheduler;
     private boolean autoStart;
     
+    /**
+     * Default constructor
+     */
+    public SchedulerServiceImpl() { }
+    
+    /**
+     * Initialization method
+     */
     public void init() {
     	logger.info("Getting a StdSchedulerFactory");
     	schedulerFactory = new StdSchedulerFactory();
@@ -35,6 +50,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 		addAllReportDispatchRecordsToScheduler();
 		startScheduler();
 		
+		logger.info("Auto start is " + autoStart);
 		if(!autoStart) {
 			stopAllTrigger();
 		}
@@ -81,6 +97,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 		}
 	}
     
+	/**
+	 * Finalizer method
+	 */
     public void destroy() {
     	logger.info("Scheduler is shutting down");
     	try {
@@ -116,17 +135,22 @@ public class SchedulerServiceImpl implements SchedulerService {
 	
 	@Override
 	public void updateSchedule(ReportDispatchRecord reportDispatchRecord) {
+		boolean isActive = false;
+		
 		try {
+			if(isActive(reportDispatchRecord)) isActive = true;
 			scheduler.deleteJob(REPORT_DISPATCH + reportDispatchRecord.getReportDispatchRecordId(), REPORT_DISPATCH_GROUP);
 		} catch (SchedulerException e) { logger.error(e.getMessage()); }
 		
 		addSchedule(reportDispatchRecord);
+		
+		if(!isActive) stop(reportDispatchRecord);
 	}
 	
 	@Override
-	public void removeSchedule(ReportDispatchRecord reportDispatchRecord) {
+	public void removeSchedule(Long id) {
 		try {
-			scheduler.deleteJob(REPORT_DISPATCH + reportDispatchRecord.getReportDispatchRecordId(), REPORT_DISPATCH_GROUP);
+			scheduler.deleteJob(REPORT_DISPATCH + id, REPORT_DISPATCH_GROUP);
 		} catch (SchedulerException e) { logger.error(e.getMessage()); }
 	}
 	
@@ -162,6 +186,12 @@ public class SchedulerServiceImpl implements SchedulerService {
 		return false;
 	}
 	
+	/**
+	 * Determines if the given cron expression is valid or not
+	 * 
+	 * @param cronExpression The cron expression
+	 * @return True if the supplied cron expression is valid, otherwise, false
+	 */
 	public static boolean isValidCronExpression(String cronExpression) {
 		return CronExpression.isValidExpression(cronExpression);
 	}

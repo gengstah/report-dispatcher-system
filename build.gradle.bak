@@ -2,8 +2,6 @@ apply plugin: 'gae'
 apply plugin: 'eclipse'
 apply plugin: 'jetty'
 
-def springVersion = "3.2.2.RELEASE"
-
 buildscript {
 	repositories {
 		mavenCentral()
@@ -14,12 +12,21 @@ buildscript {
 	}
 }
 
+configurations {
+	quartz
+}
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	def springVersion = "3.2.2.RELEASE"
+	
 	providedCompile "javax.servlet:servlet-api:2.5"
+	
+	compile "org.quartz-scheduler:quartz:1.8.6"
+	quartz "org.quartz-scheduler:quartz:1.8.6"
 	
 	testCompile "junit:junit:4.+"
 	testCompile "org.mockito:mockito-all:1.9.5"
@@ -30,30 +37,49 @@ dependencies {
 	
 	compile "org.springframework:spring-core:$springVersion"
 	compile "org.springframework:spring-context:$springVersion"
+	compile "org.springframework:spring-context-support:$springVersion"
 	compile "org.springframework:spring-jdbc:$springVersion"
 	compile "org.springframework:spring-web:$springVersion"
 	compile "org.springframework:spring-webmvc:$springVersion"
 	compile "org.springframework:spring-orm:$springVersion"
 	
 	compile "jstl:jstl:1.2"
-	
-	compile fileTree(dir: 'lib', includes: ['*.jar'])
+		
 	compile "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1"
 	runtime "org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1"
-	runtime "org.datanucleus:datanucleus-core:3.2.2"
-	runtime "org.datanucleus:datanucleus-api-jpa:3.2.1"
-	runtime "org.datanucleus:datanucleus-api-jdo:3.2.1"
-	runtime "javax.jdo:jdo2-api:2.3-eb"
+	runtime "org.datanucleus:datanucleus-core:3.1.1"
+	runtime "org.datanucleus:datanucleus-api-jpa:3.1.2"
+	runtime "org.datanucleus:datanucleus-api-jdo:3.1.2"
+	runtime "javax.jdo:jdo-api:3.0.1"
 	runtime "javax.transaction:jta:1.1"
-	runtime 'com.google.inject.extensions:guice-servlet:3.0'
-	runtime files("C:/Documents and Settings/Administrator/My Documents/Java/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.7.1/appengine-java-sdk-1.7.7.1/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.1.2.jar")
+	runtime "com.google.inject.extensions:guice-servlet:3.0"
+	runtime files("D:/Java/appengine-java-sdk-1.7.7.1/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.1.2.jar",
+				"D:/Java/appengine-java-sdk-1.7.7.1/lib/opt/user/appengine-api-labs/v1/appengine-api-labs.jar",
+				"D:/Java/appengine-java-sdk-1.7.7.1/lib/opt/tools/datanucleus/v2/datanucleus-enhancer-3.1.1.jar",
+				"D:/Java/appengine-java-sdk-1.7.7.1/lib/impl/appengine-api.jar")
 	
 	compile "javax.validation:validation-api:1.0.0.GA"
-	runtime "org.hibernate:hibernate-validator:4.3.1.Final"
+	compile "org.hibernate:hibernate-validator:4.3.1.Final"
 	
 	compile "javax.mail:mail:1.4.7"
+	
+	runtime "org.aspectj:aspectjweaver:1.7.2"
 }
 
+gaeEnhance.doFirst {
+	 copy {
+	 	into('src/main/webapp/WEB-INF/lib/')
+	 	from configurations.quartz
+	 }
+}
+
+gaeEnhance.doLast {
+	delete {
+		delete('src/main/webapp/WEB-INF/lib/')
+	}
+}
+
+war.dependsOn 'gaeEnhance'
 
 task wrapper(type: Wrapper) {
 	description = 'Generates gradlew[.bat] scripts'
@@ -71,7 +97,7 @@ task initProject () << {
 gae {
     httpPort = 8080
     optimizeWar = false
-
+	
     appcfg {
         email = '...'
         password = '...'

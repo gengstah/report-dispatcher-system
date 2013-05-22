@@ -20,6 +20,13 @@ import javax.mail.internet.MimeMultipart;
 import org.apache.log4j.Logger;
 import org.cognoscenti.reportdispatcher.domain.ReportDispatchRecord;
 
+/**
+ * Default implementation of {@link org.cognoscenti.reportdispatcher.service.MailService}
+ * 
+ * @author Geng
+ * @version 1.0
+ * @see org.cognoscenti.reportdispatcher.service.MailService
+ */
 public class MailServiceImpl implements MailService {
 	private final Logger logger = Logger.getLogger(getClass());
 	private String username;
@@ -67,11 +74,13 @@ public class MailServiceImpl implements MailService {
 		    List<String> attachments = reportDispatchRecord.getAttachments();
 		    		    
 		    for(String attachment : attachments) {
+		    	logger.info("Replacing any backslashes");
+		    	attachment = replaceBackslashes(attachment);
 		    	logger.info("Adding " + attachment + " as an attachment");
 		    	messageBodyPart = new MimeBodyPart();
 			    DataSource source = new FileDataSource(attachment);
 				messageBodyPart.setDataHandler(new DataHandler(source));
-				messageBodyPart.setFileName(attachment);
+				messageBodyPart.setFileName(getFilename(attachment));
 				multipart.addBodyPart(messageBodyPart);
 		    }
 		    
@@ -84,6 +93,15 @@ public class MailServiceImpl implements MailService {
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private String replaceBackslashes(String fullPath) {
+		return fullPath.replace('\\', '/');
+	}
+	
+	private String getFilename(String fullPath) {
+		String[] filenameArray = fullPath.split("/");
+		return filenameArray[filenameArray.length-1];
 	}
 
 	/**

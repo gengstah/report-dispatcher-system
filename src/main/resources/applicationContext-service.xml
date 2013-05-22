@@ -22,6 +22,6 @@
 	<bean id="schedulerService" class="org.cognoscenti.reportdispatcher.service.SchedulerServiceImpl">
 	    <property name="reportDispatchRecordService" ref="reportDispatchRecordService" />
 		<property name="mailService" ref="mailService" />
-		<property name="autoStart" value="true" />
+		<property name="autoStart" value="false" />
 	</bean>
 </beans>

@@ -151,7 +151,6 @@ public class ReportDispatchRecord {
 	 * @param cronSchedule the cronSchedule to set
 	 */
 	public void setCronSchedule(String cronSchedule) {
-		try { cronExpression = new CronExpression(cronSchedule); } catch (ParseException e) { }
 		this.cronSchedule = cronSchedule;
 	}
 
@@ -201,6 +200,8 @@ public class ReportDispatchRecord {
 	 * @return the cronExpression
 	 */
 	public String getScheduleDescription() {
+		if(cronExpression == null) 
+			try { cronExpression = new CronExpression(cronSchedule); } catch (ParseException e) { }
 		return cronExpression.getExpressionSummary();
 	}
 

@@ -104,9 +104,8 @@ public class ReportDispatcherController {
 	
 	@RequestMapping(value = "/record/delete/{id}", method = RequestMethod.GET)
 	public String removeComplaintForm(@PathVariable Long id) {
-		ReportDispatchRecord record = reportDispatchRecordService.getReportDispatchRecord(id);
-		reportDispatchRecordService.removeReportDispatchRecord(record);
-		schedulerService.removeSchedule(record);
+		reportDispatchRecordService.removeReportDispatchRecord(id);
+		schedulerService.removeSchedule(id);
 		
 		return "redirect:/rds/home";
 	}

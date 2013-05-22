@@ -34,9 +34,10 @@
 	});
 </script>
 </head>
-<body id="dt_example" class="standard">
+<body id="dt_example">
 	<div id="container">
 		<div class="demo_jui">
+			<div align="right"><input id="addNewRecordButton" type="button" value="Add Record" /></div>
 			<table cellpadding="0" cellspacing="0" border="0" class="display" id="reportDispatchRecordTable">
 				<thead>
 					<tr>
@@ -48,20 +49,16 @@
 				</thead>
 				<tbody>
 					<c:forEach var="reportDispatchRecord" items="${ reportDispatchRecords }" varStatus="status">
-						<tr onMouseOver="this.className='highlight'" onMouseOut="this.className=''">
+						<tr>
 							<td><a href="<c:url value='/rds/record/update/${reportDispatchRecord.reportDispatchRecordId}' />"><c:out value="${ reportDispatchRecord.name }" /></a></td>
 							<td><c:out value="${ reportDispatchRecord.description }" /></td>
-							<td><c:out value="${ reportDispatchRecord.cronSchedule }" /></td>
+							<td><c:out value="${ reportDispatchRecord.scheduleDescription }" /></td>
 							<td>
 								<input id="startButton" type="button" <c:if test="${ reportDispatchRecord.active }">disabled="disabled"</c:if> value="Start" onclick="window.location = '<c:url value='/rds/record/start/${reportDispatchRecord.reportDispatchRecordId}' />';" />
 								<input id="stopButton" type="button" <c:if test="${ !reportDispatchRecord.active }">disabled="disabled"</c:if> value="Stop" onclick="window.location = '<c:url value='/rds/record/stop/${reportDispatchRecord.reportDispatchRecordId}' />';" />
 							</td>
 						</tr>
 					</c:forEach>
-					<tr>
-						<td colspan="3">&nbsp;</td>
-						<td align="right"><input id="addNewRecordButton" type="button" value="Add Record" /></td>
-					</tr>
 				</tbody>
 			</table>
 		</div>

@@ -6,6 +6,13 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+/**
+ * The job that is executed by the scheduler
+ * 
+ * @author Geng
+ * @version 1.0
+ * @see org.cognoscenti.reportdispatcher.domain.ReportDispatchRecord
+ */
 public class ReportDispatcherJob extends QuartzJobBean {
 	private MailService mailService;
 	private ReportDispatchRecord reportDispatchRecord;
